@@ -1,0 +1,26 @@
+{
+    "env": {
+        "browser": true,
+        "es2020": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:prettier/recommended" // Oltava viimeinen tässä listassa!
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2020,
+        "sourceType": "module"
+    },
+    "rules": {
+        "no-console": "error",
+        "no-unused-vars": "warn"
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}
