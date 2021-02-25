@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     },
     linkImage: {
         maxWidth: '100%',
-        transitionDuration: theme.transitions.duration.shortest,
+        transitionDuration: theme.transitions.duration.shorter,
         '&:hover': {
             transform: 'scale(1.2)',
         },
@@ -67,7 +67,7 @@ const Home = () => {
                             item
                             key={category.img}
                             xs={6}
-                            sm={4}
+                            md={4}
                             className={classes.linkWrapper}
                             component={Link}
                             to={`/${category.page}`}>

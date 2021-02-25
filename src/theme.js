@@ -7,6 +7,9 @@ const base_font_family = ['Open Sans', 'sans-serif'].join(',');
 const theme = createMuiTheme({
     palette: {
         background: '#fff',
+        primary: {
+            main: '#33ff33',
+        },
     },
     typography: {
         fontFamily: base_font_family,
@@ -29,6 +32,12 @@ const theme = createMuiTheme({
         body2: {
             fontSize: '0.8rem',
             lineHeight: base_line_height,
+        },
+    },
+    transitions: {
+        duration: {
+            shortest: 75,
+            shorter: 150,
         },
     },
     spacing: (factor) => `${base_line_height * factor}rem`,
