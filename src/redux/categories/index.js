@@ -1,12 +1,16 @@
 import {
     GET_CATEGORY_PRODUCTS,
     GET_CATEGORY_PRODUCTS_SUCCESS,
+    GET_AVAILABILITIES_SUCCESS,
+    GET_AVAILABILITIES_ERROR,
     getCategoryProductsSuccess,
     getCategoryProductsError,
+    getAvailabilitesSuccess,
+    getAvailabilitesError,
 } from './actions';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
-import { of } from 'rxjs';
+import { of, from } from 'rxjs';
 import _ from 'lodash';
 
 import api from '../../utils/api';
@@ -32,12 +36,45 @@ const initialState = {
     gloves: [],
     beanies: [],
     facemasks: [],
+    manufacturers: [],
 };
 
 const categories = (state = initialState, action) => {
     switch (action.type) {
         case GET_CATEGORY_PRODUCTS_SUCCESS:
-            return _.assign({}, state, { [action.payload.categoryName]: parseProductResponse(action.payload.res) });
+            return _.assign({}, state, {
+                // Save new products
+                [action.payload.categoryName]: action.payload.products,
+                // Save previously unseen manufacturers
+                manufacturers: _.concat(
+                    state.manufacturers,
+                    _.difference(action.payload.manufacturers, state.manufacturers),
+                ),
+            });
+        case GET_AVAILABILITIES_SUCCESS:
+            return _.assign(
+                {},
+                state,
+                // Update availabilities here
+                {
+                    [action.payload.categoryName]: updateAvailabilities(
+                        state[action.payload.categoryName],
+                        action.payload.availabilities,
+                    ),
+                },
+            );
+        case GET_AVAILABILITIES_ERROR:
+            return _.assign(
+                {},
+                state,
+                // Update availabilities here
+                {
+                    [action.payload.categoryName]: updateAvailabilitiesError(
+                        state[action.payload.categoryName],
+                        action.payload.manufacturers,
+                    ),
+                },
+            );
         default:
             return state;
     }
@@ -56,19 +93,46 @@ export const getCategoryProductsEpic = (action$) =>
         ),
     );
 
-// Utils
-const parseProductResponse = (res) => {
-    const products = [];
-    for (let i = 0; i < res.length; i++) {
-        let product = {
-            id: res[i].id,
-            availability: 'Waiting...',
-            name: res[i].name,
-            colors: res[i].color.join(', '),
-            manufacturer: res[i].manufacturer,
-            price: res[i].price,
-        };
-        products.push(product);
+export const getAvailabilitiesEpic = (action$) =>
+    action$.pipe(
+        ofType(GET_CATEGORY_PRODUCTS_SUCCESS),
+        mergeMap((action) => {
+            // Make a separate call for each manufacturer
+            return from(action.payload.manufacturers).pipe(
+                mergeMap((m) =>
+                    api.get(`/availability/${m}`).pipe(
+                        map((res) => getAvailabilitesSuccess(res.response, action.payload.categoryName)),
+                        catchError((error) =>
+                            of(getAvailabilitesError(error, action.payload.categoryName, action.payload.manufacturers)),
+                        ),
+                    ),
+                ),
+            );
+        }),
+    );
+
+// utils
+
+const updateAvailabilities = (products, availabilities) => {
+    const newProducts = _.cloneDeep(products);
+    // Check if availability available for each of the products
+    for (let i = 0; i < newProducts.length; i++) {
+        let pid = newProducts[i].id;
+        if (availabilities[pid]) {
+            newProducts[i].availability = availabilities[pid];
+        }
     }
-    return products;
+    return newProducts;
+};
+
+const updateAvailabilitiesError = (products, manufacturers) => {
+    const newProducts = _.cloneDeep(products);
+    // Check if availability available for each of the products
+    // for (let i = 0; i < newProducts.length; i++) {
+    //     let pid = newProducts[i].id;
+    //     if (availabilities[pid]) {
+    //         newProducts[i].availability = availabilities[pid];
+    //     }
+    // }
+    return newProducts;
 };

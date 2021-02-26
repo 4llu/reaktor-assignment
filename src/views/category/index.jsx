@@ -8,14 +8,14 @@ import './style.css';
 import { getCategoryProducts } from '../../redux/categories/actions';
 
 const availabilityIconState = (value) => {
-    if (value == 'Waiting...') {
-        return ', waiting';
-    } else if (value == 'Less than 10 ') {
+    if (value == 'Out of stock') {
+        return ', no';
+    } else if (value == 'Less than 10') {
         return ', less';
     } else if (value == 'In stock') {
         return '';
     } else {
-        return ', no';
+        return ', waiting';
     }
 };
 
@@ -64,17 +64,6 @@ const columns = [
     { field: 'manufacturer', headerName: 'Manufacturer', width: 200 },
     { field: 'price', headerName: 'Price', type: 'number', width: 130, renderCell: (params) => `${params.value}.00 €` },
 ];
-
-// const rows = [
-//     {
-//         availability: 'In stock',
-//         id: '123',
-//         name: 'Ganzo mittens',
-//         colors: 'green, brown, red, grey, blue, white',
-//         manufacturer: 'Adidas',
-//         price: 134,
-//     },
-// ];
 
 const useStyles = makeStyles(() => ({
     title: {
