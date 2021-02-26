@@ -1,13 +1,13 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { unstable_createMuiStrictModeTheme } from '@material-ui/core/styles';
 
 // Some constants
 const base_line_height = 1.2;
 const base_font_family = ['Open Sans', 'sans-serif'].join(',');
 
-const theme = createMuiTheme({
+const theme = unstable_createMuiStrictModeTheme({
     palette: {
         primary: {
-            main: '#33ff33',
+            main: '#00FD00',
         },
     },
     typography: {

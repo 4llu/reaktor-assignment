@@ -7,20 +7,50 @@ import { useDispatch, useSelector } from 'react-redux';
 import './style.css';
 import { getCategoryProducts } from '../../redux/categories/actions';
 
+const availabilityIconState = (value) => {
+    if (value == 'Waiting...') {
+        return ', waiting';
+    } else if (value == 'Less than 10 ') {
+        return ', less';
+    } else if (value == 'In stock') {
+        return '';
+    } else {
+        return ', no';
+    }
+};
+
 const columns = [
     {
         field: 'availability',
         headerName: 'Availability',
-        width: 180,
+        width: 170,
         renderCell: (params) => (
             <div className='availability-wrapper'>
-                <div className={`availability-icon ${params.value == 'no' ? ', no' : ''}`} />
+                <div className={`availability-icon ${availabilityIconState(params.value)}`} />
                 {params.value}
             </div>
         ),
     },
-    { field: 'id', headerName: 'ID', width: 200 },
-    { field: 'name', headerName: 'Name', width: 200 },
+    {
+        field: 'id',
+        headerName: 'ID',
+        width: 240,
+        renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <span className='table-cell-truncate small'>{params.value}</span>
+            </Tooltip>
+        ),
+    },
+    {
+        field: 'name',
+        headerName: 'Name',
+        width: 210,
+        renderCell: (params) => (
+            <Tooltip title={params.value}>
+                <span className='table-cell-truncate'>{params.value}</span>
+            </Tooltip>
+        ),
+    },
     {
         field: 'colors',
         headerName: 'Colors',
@@ -32,7 +62,7 @@ const columns = [
         ),
     },
     { field: 'manufacturer', headerName: 'Manufacturer', width: 200 },
-    { field: 'price', headerName: 'Price', type: 'number', width: 150, renderCell: (params) => `${params.value} €` },
+    { field: 'price', headerName: 'Price', type: 'number', width: 130, renderCell: (params) => `${params.value}.00 €` },
 ];
 
 // const rows = [

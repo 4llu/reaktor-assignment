@@ -62,7 +62,7 @@ const parseProductResponse = (res) => {
     for (let i = 0; i < res.length; i++) {
         let product = {
             id: res[i].id,
-            availability: '-',
+            availability: 'Waiting...',
             name: res[i].name,
             colors: res[i].color.join(', '),
             manufacturer: res[i].manufacturer,

@@ -2,6 +2,10 @@
     background-color: #f5f5f5;
 }
 
+.MuiDataGrid-root .MuiDataGrid-colCell.MuiDataGrid-colCell, .MuiDataGrid-root .MuiDataGrid-cell.MuiDataGrid-cell {
+    padding: 0 2rem;
+}
+
 .availability-wrapper {
     display: flex;
     align-items: center;
@@ -19,6 +23,14 @@
 
 .availability-icon.no {
     background-color: #d32f2f;
+}
+
+.availability-icon.waiting {
+    background-color: rgba(0, 0, 0, 0.12);
+}
+
+.availability-icon.less {
+    background-color: #ff9800;
 }
 
 .table-cell-truncate {
