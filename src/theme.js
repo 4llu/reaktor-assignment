@@ -6,7 +6,6 @@ const base_font_family = ['Open Sans', 'sans-serif'].join(',');
 
 const theme = createMuiTheme({
     palette: {
-        background: '#fff',
         primary: {
             main: '#33ff33',
         },
@@ -44,6 +43,7 @@ const theme = createMuiTheme({
 });
 
 const overrides = theme.overrides;
+
 overrides.MuiCssBaseline = {
     '@global': {
         body: {

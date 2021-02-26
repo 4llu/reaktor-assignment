@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
-        backgroundColor: theme.palette.grey[50],
+        backgroundColor: theme.palette.grey[100],
         borderBottom: `1px solid ${theme.palette.grey[300]}`,
     },
     logo: {
@@ -53,7 +53,7 @@ const Navbar = (props) => {
                         {categories.map((category) => (
                             <Link
                                 key={category.page}
-                                to={`/${category.page}`}
+                                to={`/category/${category.page}`}
                                 component={RouterLink}
                                 className={classes.navLink}>
                                 {category.name}

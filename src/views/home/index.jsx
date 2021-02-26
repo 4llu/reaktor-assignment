@@ -70,7 +70,7 @@ const Home = () => {
                             md={4}
                             className={classes.linkWrapper}
                             component={Link}
-                            to={`/${category.page}`}>
+                            to={`/category/${category.page}`}>
                             <Box overflow='hidden'>
                                 <img
                                     src={`/images/${category.img}`}

@@ -7,6 +7,7 @@ import theme from './theme';
 
 import Navbar from './components/navbar';
 import Home from './views/home';
+import Category from './views/category';
 
 function App() {
     const history = createBrowserHistory();
@@ -17,6 +18,7 @@ function App() {
             <Router history={history}>
                 <Navbar />
                 <Route exact={true} path='/' component={Home} />
+                <Route path='/category/:category' component={Category} />
             </Router>
         </ThemeProvider>
     );
