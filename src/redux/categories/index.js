@@ -95,16 +95,15 @@ export const getCategoryProductsEpic = (action$) =>
 
 export const getAvailabilitiesEpic = (action$) =>
     action$.pipe(
-        ofType(GET_CATEGORY_PRODUCTS_SUCCESS),
+        // GET_AVAILABILITIES_ERROR is here to try again on manufacturers that threw an error
+        ofType(GET_CATEGORY_PRODUCTS_SUCCESS, GET_AVAILABILITIES_ERROR),
         mergeMap((action) => {
             // Make a separate call for each manufacturer
             return from(action.payload.manufacturers).pipe(
                 mergeMap((m) =>
                     api.get(`/availability/${m}`).pipe(
                         map((res) => getAvailabilitesSuccess(res.response, action.payload.categoryName)),
-                        catchError((error) =>
-                            of(getAvailabilitesError(error, action.payload.categoryName, action.payload.manufacturers)),
-                        ),
+                        catchError((error) => of(getAvailabilitesError(error, action.payload.categoryName, m))),
                     ),
                 ),
             );
@@ -127,12 +126,11 @@ const updateAvailabilities = (products, availabilities) => {
 
 const updateAvailabilitiesError = (products, manufacturers) => {
     const newProducts = _.cloneDeep(products);
-    // Check if availability available for each of the products
-    // for (let i = 0; i < newProducts.length; i++) {
-    //     let pid = newProducts[i].id;
-    //     if (availabilities[pid]) {
-    //         newProducts[i].availability = availabilities[pid];
-    //     }
-    // }
+    // // Add error text to availability
+    for (let i = 0; i < newProducts.length; i++) {
+        if (newProducts[i].manufacturer == _.capitalize(manufacturers[0])) {
+            newProducts[i].availability = 'Trying again...';
+        }
+    }
     return newProducts;
 };

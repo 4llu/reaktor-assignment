@@ -79,9 +79,12 @@ export const getAvailabilitesSuccess = (res, categoryName) => {
     };
 };
 
-export const getAvailabilitesError = (error) => ({
+export const getAvailabilitesError = (error, categoryName, manufacturer) => ({
     type: GET_AVAILABILITIES_ERROR,
+    // Needs to match GET_CATEGORY_PRODUCTS_SUCCESS
     payload: {
         error,
+        categoryName,
+        manufacturers: [manufacturer],
     },
 });
