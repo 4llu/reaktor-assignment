@@ -95,7 +95,13 @@ const Category = () => {
                 </Typography>
             </Box>
             <Box my={2}>
-                <DataGrid rows={rows} columns={columns} classes={{ row: classes.row }} autoHeight={true} />
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    classes={{ row: classes.row }}
+                    autoHeight={true}
+                    loading={rows.length == 0}
+                />
             </Box>
         </Container>
     );

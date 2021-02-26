@@ -37,6 +37,7 @@ const initialState = {
     beanies: [],
     facemasks: [],
     manufacturers: [],
+    availabilities: {},
 };
 
 const categories = (state = initialState, action) => {
@@ -44,7 +45,7 @@ const categories = (state = initialState, action) => {
         case GET_CATEGORY_PRODUCTS_SUCCESS:
             return _.assign({}, state, {
                 // Save new products
-                [action.payload.categoryName]: action.payload.products,
+                [action.payload.categoryName]: updateAvailabilities(action.payload.products, state.availabilities),
                 // Save previously unseen manufacturers
                 manufacturers: _.concat(
                     state.manufacturers,
@@ -52,22 +53,19 @@ const categories = (state = initialState, action) => {
                 ),
             });
         case GET_AVAILABILITIES_SUCCESS:
-            return _.assign(
-                {},
-                state,
-                // Update availabilities here
-                {
-                    [action.payload.categoryName]: updateAvailabilities(
-                        state[action.payload.categoryName],
-                        action.payload.availabilities,
-                    ),
-                },
-            );
+            return _.assign({}, state, {
+                // Update availabilities for everything (in case page was changed in between)
+                gloves: updateAvailabilities(state.gloves, action.payload.availabilities),
+                beanies: updateAvailabilities(state.beanies, action.payload.availabilities),
+                facemasks: updateAvailabilities(state.facemasks, action.payload.availabilities),
+                // Store availabilities
+                availabilities: _.assign({}, state.availabilities, action.payload.availabilities),
+            });
         case GET_AVAILABILITIES_ERROR:
             return _.assign(
                 {},
                 state,
-                // Update availabilities here
+                // Update availabilities to "trying again"
                 {
                     [action.payload.categoryName]: updateAvailabilitiesError(
                         state[action.payload.categoryName],
@@ -93,20 +91,24 @@ export const getCategoryProductsEpic = (action$) =>
         ),
     );
 
-export const getAvailabilitiesEpic = (action$) =>
+export const getAvailabilitiesEpic = (action$, state$) =>
     action$.pipe(
         // GET_AVAILABILITIES_ERROR is here to try again on manufacturers that threw an error
         ofType(GET_CATEGORY_PRODUCTS_SUCCESS, GET_AVAILABILITIES_ERROR),
         mergeMap((action) => {
-            // Make a separate call for each manufacturer
-            return from(action.payload.manufacturers).pipe(
-                mergeMap((m) =>
-                    api.get(`/availability/${m}`).pipe(
-                        map((res) => getAvailabilitesSuccess(res.response, action.payload.categoryName)),
-                        catchError((error) => of(getAvailabilitesError(error, action.payload.categoryName, m))),
+            if (Object.keys(state$.value.categories.availabilities).length == 0 || action.payload.retry) {
+                // Make a separate call for each manufacturer
+                return from(action.payload.manufacturers).pipe(
+                    mergeMap((m) =>
+                        api.get(`/availability/${m}`).pipe(
+                            map((res) => getAvailabilitesSuccess(res.response, action.payload.categoryName)),
+                            catchError((error) => of(getAvailabilitesError(error, action.payload.categoryName, m))),
+                        ),
                     ),
-                ),
-            );
+                );
+            } else {
+                return of({ type: 'ALREADY_FETCHED' });
+            }
         }),
     );
 
@@ -126,9 +128,12 @@ const updateAvailabilities = (products, availabilities) => {
 
 const updateAvailabilitiesError = (products, manufacturers) => {
     const newProducts = _.cloneDeep(products);
-    // // Add error text to availability
+    // // Add error text to availability of products of the failed manufacturer
     for (let i = 0; i < newProducts.length; i++) {
-        if (newProducts[i].manufacturer == _.capitalize(manufacturers[0])) {
+        if (
+            newProducts[i].manufacturer == _.capitalize(manufacturers[0]) &&
+            newProducts[i].availability == 'Waiting...'
+        ) {
             newProducts[i].availability = 'Trying again...';
         }
     }

@@ -86,5 +86,6 @@ export const getAvailabilitesError = (error, categoryName, manufacturer) => ({
         error,
         categoryName,
         manufacturers: [manufacturer],
+        retry: true,
     },
 });
