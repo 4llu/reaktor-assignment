@@ -8,7 +8,9 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "express": "^4.17.1",
     "history": "^4.10.1",
+    "path": "^0.12.7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-redux": "^7.2.2",
@@ -18,7 +20,11 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-observable": "^1.2.0",
     "rxjs": "^6.6.6",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "prettier": "^2.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -45,8 +51,10 @@
     ]
   },
   "devDependencies": {
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "prettier": "^2.2.1"
+
+  },
+  "engines": {
+    "yarn": "1.X",
+    "node": "14.2"
   }
 }
