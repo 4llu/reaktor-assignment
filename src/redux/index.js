@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
 
-const rootReducer = combineReducers({});
+import categories from './categories';
+
+const rootReducer = combineReducers({ categories });
 
 export default rootReducer;
 

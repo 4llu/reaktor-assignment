@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Box, Link, makeStyles } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -22,23 +23,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const categories = [
-    {
-        name: 'Gloves',
-        page: 'gloves',
-    },
-    {
-        name: 'Face masks',
-        page: 'face-masks',
-    },
-    {
-        name: 'Beanies',
-        page: 'beanies',
-    },
-];
-
 const Navbar = (props) => {
     const classes = useStyles(props);
+    const categories = useSelector((state) => state.categories);
 
     return (
         <Box px={4} py={1} className={classes.wrapper} component='header'>

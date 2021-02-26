@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Grid, Box, Typography, makeStyles } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
     links: {
@@ -31,24 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = () => {
     const classes = useStyles();
-
-    const categories = [
-        {
-            name: 'Gloves',
-            page: 'gloves',
-            img: 'gloves.jpg',
-        },
-        {
-            name: 'Face masks',
-            page: 'face-masks',
-            img: 'face_mask.jpg',
-        },
-        {
-            name: 'Beanies',
-            page: 'beanies',
-            img: 'beanie.jpg',
-        },
-    ];
+    const categories = useSelector((state) => state.categories);
 
     return (
         <Container>
