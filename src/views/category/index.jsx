@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import './style.css';
 import { getCategoryProducts } from '../../redux/categories/actions';
+import NotFound from '../notfound';
 
 const availabilityIconState = (value) => {
     if (value == 'Out of stock') {
@@ -77,9 +78,14 @@ const useStyles = makeStyles(() => ({
 const Category = () => {
     const classes = useStyles();
     const { category } = useParams();
-    const title = useSelector((state) => state.categories.categories.find((e) => e.page == category).name);
+    const categoryDefinition = useSelector((state) => state.categories.categories.find((e) => e.page == category));
     const rows = useSelector((state) => state.categories[category]);
     const dispatch = useDispatch();
+
+    if (!categoryDefinition) {
+        return <NotFound />;
+    }
+    const title = categoryDefinition.name;
 
     useEffect(() => {
         if (rows.length == 0) {
