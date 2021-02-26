@@ -1,3 +1,10 @@
+import { GET_CATEGORY_PRODUCTS, getCategoryProductsSuccess, getCategoryProductsError } from './actions';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { ofType } from 'redux-observable';
+import { of } from 'rxjs';
+
+import api from '../../utils/api';
+
 const initialState = [
     {
         name: 'Gloves',
@@ -7,7 +14,7 @@ const initialState = [
     },
     {
         name: 'Face masks',
-        page: 'face-masks',
+        page: 'facemasks',
         img: 'face_mask.jpg',
         products: [],
     },
@@ -27,3 +34,14 @@ const categories = (state = initialState, action) => {
 };
 
 export default categories;
+
+export const getCategoryProductsEpic = (action$) =>
+    action$.pipe(
+        ofType(GET_CATEGORY_PRODUCTS),
+        mergeMap((action) =>
+            api.get(`/products/${action.payload.categoryName}`).pipe(
+                map((res) => getCategoryProductsSuccess(res.response)),
+                catchError((error) => of(getCategoryProductsError(error))),
+            ),
+        ),
+    );
