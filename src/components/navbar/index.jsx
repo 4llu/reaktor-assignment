@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Navbar = (props) => {
     const classes = useStyles(props);
-    const categories = useSelector((state) => state.categories);
+    const categories = useSelector((state) => state.categories.categories);
 
     return (
         <Box px={4} py={1} className={classes.wrapper} component='header'>

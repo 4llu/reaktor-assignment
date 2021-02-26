@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = () => {
     const classes = useStyles();
-    const categories = useSelector((state) => state.categories);
+    const categories = useSelector((state) => state.categories.categories);
 
     return (
         <Container>

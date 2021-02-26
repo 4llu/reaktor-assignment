@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Box, Typography, Tooltip, makeStyles } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import { useParams } from 'react-router-dom';
@@ -44,30 +44,6 @@ const columns = [
 //         manufacturer: 'Adidas',
 //         price: 134,
 //     },
-//     {
-//         availability: 'yes',
-//         id: '345',
-//         name: 'Ganzo mittens',
-//         colors: 'green',
-//         manufacturer: 'Adidas',
-//         price: 134,
-//     },
-//     {
-//         availability: 'no',
-//         id: '234',
-//         name: 'Ganzo mittens',
-//         colors: 'green',
-//         manufacturer: 'Adidas',
-//         price: 134,
-//     },
-//     {
-//         availability: 'no',
-//         id: '1234',
-//         name: 'Ganzo mittens',
-//         colors: 'green',
-//         manufacturer: 'Adidas',
-//         price: 134,
-//     },
 // ];
 
 const useStyles = makeStyles(() => ({
@@ -82,11 +58,15 @@ const useStyles = makeStyles(() => ({
 const Category = () => {
     const classes = useStyles();
     const { category } = useParams();
-    const title = useSelector((state) => state.categories.find((e) => e.page == category).name);
-    const rows = useSelector((state) => state.categories.find((e) => e.page == category).products);
+    const title = useSelector((state) => state.categories.categories.find((e) => e.page == category).name);
+    const rows = useSelector((state) => state.categories[category]);
     const dispatch = useDispatch();
 
-    dispatch(getCategoryProducts(category));
+    useEffect(() => {
+        if (rows.length == 0) {
+            dispatch(getCategoryProducts(category));
+        }
+    });
 
     return (
         <Container>
