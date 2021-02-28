@@ -2,10 +2,9 @@ import { Router, Switch, Route } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { applyMiddleware, createStore } from 'redux';
+import { applyMiddleware, createStore, compose } from 'redux';
 import { Provider } from 'react-redux';
 import { createEpicMiddleware } from 'redux-observable';
-import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 
 import theme from './theme';
 import rootReducer, { rootEpic } from './redux';
@@ -19,7 +18,7 @@ function App() {
     const history = createBrowserHistory();
 
     const epicMiddleware = createEpicMiddleware();
-    const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(epicMiddleware)));
+    const store = createStore(rootReducer, compose(applyMiddleware(epicMiddleware)));
     epicMiddleware.run(rootEpic);
 
     return (
